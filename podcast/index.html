@@ -560,6 +560,8 @@
             
             if (index !== currentTrackIndex) {
                 playEpisode(index);
+            } else if (audio.paused) {
+                audio.play();
             }
 
             const rect = itemElement.getBoundingClientRect();

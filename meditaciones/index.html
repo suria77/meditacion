@@ -465,7 +465,44 @@
            if (!isActive) currentBlock.classList.add('active');
        }
 
+       const RUTAS_ALT = {
+        "/meditaciones/audio/1-Liberandose-de-la-negatividad.mp3": [
+                "/tanda-02/meditaciones/audio/1-Liberandose-de-la-negatividad.mp3"
+        ],
+        "/meditaciones/audio/1-Paz-interior-con-el-mantra-om.mp3": [
+                "/tanda-09/meditaciones/audio/1-Paz-interior-con-el-mantra-om.mp3"
+        ],
+        "/meditaciones/audio/1-Paz-mental-en-3-simples-pasos.mp3": [
+                "/tanda-10/meditaciones/audio/1-Paz-mental-en-3-simples-pasos.mp3"
+        ],
+        "/meditaciones/audio/2-Meditacion-felicidad-verdadera.mp3": [
+                "/tanda-06/meditaciones/audio/2-Meditacion-felicidad-verdadera.mp3"
+        ],
+        "/meditaciones/audio/2-Meditacion-om-facil-silenciar-la-mente.mp3": [
+                "/tanda-08/meditaciones/audio/2-Meditacion-om-facil-silenciar-la-mente.mp3"
+        ],
+        "/meditaciones/audio/2-Meditacion-relajacion-Yoga-Nidra.mp3": [
+                "/tanda-06/meditaciones/audio/2-Meditacion-relajacion-Yoga-Nidra.mp3"
+        ],
+        "/meditaciones/audio/3-Del-estres-a-la-Paz-en-minutos.mp3": [
+                "/tanda-08/meditaciones/audio/3-Del-estres-a-la-Paz-en-minutos.mp3"
+        ],
+        "/meditaciones/audio/3-Meditacion-para-un-dia-luminoso.mp3": [
+                "/tanda-09/meditaciones/audio/3-Meditacion-para-un-dia-luminoso.mp3"
+        ],
+        "/meditaciones/audio/3-Relax-y-silencio-mental-mindfulness.mp3": [
+                "/tanda-05/meditaciones/audio/3-Relax-y-silencio-mental-mindfulness.mp3"
+        ]
+};
+       let audioActual = '';
+       audio.addEventListener('error', function () {
+           const lista = [audioActual].concat(RUTAS_ALT[audioActual] || []);
+           const i = lista.findIndex(function (c) { return new URL(c, location.href).href === audio.src; });
+           if (i >= 0 && i + 1 < lista.length) { audio.src = lista[i + 1]; audio.play().catch(function () {}); }
+       });
+
        function playRealAudio(emotion, title, audioUrl) {
+           audioActual = audioUrl;
            document.getElementById('playerEmotion').innerText = emotion;
            document.getElementById('playerTitle').innerText = title;
            audio.src = audioUrl;

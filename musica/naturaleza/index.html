@@ -474,6 +474,57 @@
         let isSeekingAudio = false;
 
         const audio = document.getElementById('mainAudio');
+        // --- Búsqueda automática de audios: si una ruta falla, prueba las alternativas ---
+        const RUTAS_ALT = {
+        "/musica/naturaleza/audio/01-olas-del-mar.mp3": [
+                "/naturaleza/audio/01-olas-del-mar.mp3",
+                "/01-olas-del-mar.mp3"
+        ],
+        "/musica/naturaleza/audio/02-sonido-de-lluvia.mp3": [
+                "/naturaleza/audio/02-sonido-de-lluvia.mp3",
+                "/02-sonido-de-lluvia.mp3"
+        ],
+        "/musica/naturaleza/audio/03-sonido-de-lluvia-2.mp3": [
+                "/naturaleza/audio/03-sonido-de-lluvia-2.mp3",
+                "/03-sonido-de-lluvia-2.mp3"
+        ],
+        "/musica/naturaleza/audio/04-sonido-de-viento-suave.mp3": [
+                "/naturaleza/audio/04-sonido-de-viento-suave.mp3",
+                "/04-sonido-de-viento-suave.mp3"
+        ],
+        "/musica/naturaleza/audio/05-canto-suave-de-pajaros.mp3": [
+                "/naturaleza/audio/05-canto-suave-de-pajaros.mp3",
+                "/05-canto-suave-de-pajaros.mp3"
+        ],
+        "/musica/naturaleza/audio/06-sonido-de-fuego-en-el-bosque.mp3": [
+                "/naturaleza/audio/06-sonido-de-fuego-en-el-bosque.mp3",
+                "/06-sonido-de-fuego-en-el-bosque.mp3"
+        ],
+        "/musica/naturaleza/audio/07-lluvia-y-fuego.mp3": [
+                "/naturaleza/audio/07-lluvia-y-fuego.mp3",
+                "/07-lluvia-y-fuego.mp3"
+        ],
+        "/musica/naturaleza/audio/08-arroyo.mp3": [
+                "/naturaleza/audio/08-arroyo.mp3",
+                "/08-arroyo.mp3"
+        ]
+};
+        let hayGesto = false;
+        ['pointerdown', 'touchstart', 'keydown'].forEach(function (ev) {
+            document.addEventListener(ev, function () { hayGesto = true; }, { once: true, passive: true });
+        });
+        audio.addEventListener('error', function () {
+            const base = tracks[currentTrackIndex];
+            const lista = [base].concat(RUTAS_ALT[base] || []);
+            const actual = lista.findIndex(function (c) { return new URL(c, location.href).href === audio.src; });
+            if (actual >= 0 && actual + 1 < lista.length) {
+                audio.src = lista[actual + 1];
+                if (hayGesto) audio.play().catch(function () {});
+            }
+        });
+        // recarga la primera pista ya con la búsqueda automática activa
+        audio.src = tracks[currentTrackIndex];
+
         const mainPlayImg = document.getElementById('mainPlayImg');
         const playBtnBtn = document.getElementById('playBtnBtn');
         const playerWrapper = document.getElementById('playerWrapper');
@@ -561,6 +612,8 @@
             
             if (index !== currentTrackIndex) {
                 playEpisode(index);
+            } else if (audio.paused) {
+                audio.play();
             }
 
             const rect = itemElement.getBoundingClientRect();

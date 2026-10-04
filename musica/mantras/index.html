@@ -574,6 +574,73 @@
         let isSeekingAudio = false;
 
         const audio = document.getElementById('mainAudio');
+        // --- Búsqueda automática de audios: si una ruta falla, prueba las alternativas ---
+        const RUTAS_ALT = {
+        "/musica/mantras/audio/MANTRA-OM.mp3": [
+                "/tanda-02/musica/mantras/audio/MANTRA-OM.mp3",
+                "/mantras/audio/MANTRA-OM.mp3"
+        ],
+        "/musica/mantras/audio/OM-NAMAH-SHIVAYA.mp3": [
+                "/tanda-05/musica/mantras/audio/OM-NAMAH-SHIVAYA.mp3",
+                "/mantras/audio/OM-NAMAH-SHIVAYA.mp3"
+        ],
+        "/musica/mantras/audio/HARE-KRISHNA-MAHAMANTRA.mp3": [
+                "/tanda-10/musica/mantras/audio/HARE-KRISHNA-MAHAMANTRA.mp3",
+                "/mantras/audio/HARE-KRISHNA-MAHAMANTRA.mp3"
+        ],
+        "/musica/mantras/audio/KUBERAASHTALAKSHMI-MANTRA.mp3": [
+                "/tanda-03/musica/mantras/audio/KUBERAASHTALAKSHMI-MANTRA.mp3",
+                "/mantras/audio/KUBERAASHTALAKSHMI-MANTRA.mp3"
+        ],
+        "/musica/mantras/audio/GAYATRI-MANTRA.mp3": [
+                "/tanda-04/musica/mantras/audio/GAYATRI-MANTRA.mp3",
+                "/mantras/audio/GAYATRI-MANTRA.mp3"
+        ],
+        "/musica/mantras/audio/MANTRA-DE-GANESHA.mp3": [
+                "/tanda-10/musica/mantras/audio/MANTRA-DE-GANESHA.mp3",
+                "/mantras/audio/MANTRA-DE-GANESHA.mp3"
+        ],
+        "/musica/mantras/audio/MANTRA-DE-KALI.mp3": [
+                "/tanda-09/musica/mantras/audio/MANTRA-DE-KALI.mp3",
+                "/mantras/audio/MANTRA-DE-KALI.mp3"
+        ],
+        "/musica/mantras/audio/MANTRA-DE-DURGA.mp3": [
+                "/tanda-04/musica/mantras/audio/MANTRA-DE-DURGA.mp3",
+                "/mantras/audio/MANTRA-DE-DURGA.mp3"
+        ],
+        "/musica/mantras/audio/MANTRA-DE-LAKSHMI.mp3": [
+                "/tanda-07/musica/mantras/audio/MANTRA-DE-LAKSHMI.mp3",
+                "/mantras/audio/MANTRA-DE-LAKSHMI.mp3"
+        ],
+        "/musica/mantras/audio/SO-HAM.mp3": [
+                "/tanda-07/musica/mantras/audio/SO-HAM.mp3",
+                "/mantras/audio/SO-HAM.mp3"
+        ],
+        "/musica/mantras/audio/OM-NAMO-BHAGAVATE-VASUDEVAYA.mp3": [
+                "/tanda-08/musica/mantras/audio/OM-NAMO-BHAGAVATE-VASUDEVAYA.mp3",
+                "/mantras/audio/OM-NAMO-BHAGAVATE-VASUDEVAYA.mp3"
+        ],
+        "/musica/mantras/audio/OM-NAMO-NARAYANAYA.mp3": [
+                "/tanda-03/musica/mantras/audio/OM-NAMO-NARAYANAYA.mp3",
+                "/mantras/audio/OM-NAMO-NARAYANAYA.mp3"
+        ]
+};
+        let hayGesto = false;
+        ['pointerdown', 'touchstart', 'keydown'].forEach(function (ev) {
+            document.addEventListener(ev, function () { hayGesto = true; }, { once: true, passive: true });
+        });
+        audio.addEventListener('error', function () {
+            const base = tracks[currentTrackIndex];
+            const lista = [base].concat(RUTAS_ALT[base] || []);
+            const actual = lista.findIndex(function (c) { return new URL(c, location.href).href === audio.src; });
+            if (actual >= 0 && actual + 1 < lista.length) {
+                audio.src = lista[actual + 1];
+                if (hayGesto) audio.play().catch(function () {});
+            }
+        });
+        // recarga la primera pista ya con la búsqueda automática activa
+        audio.src = tracks[currentTrackIndex];
+
         const mainPlayImg = document.getElementById('mainPlayImg');
         const playBtnBtn = document.getElementById('playBtnBtn');
         const playerWrapper = document.getElementById('playerWrapper');
@@ -661,6 +728,8 @@
             
             if (index !== currentTrackIndex) {
                 playEpisode(index);
+            } else if (audio.paused) {
+                audio.play();
             }
 
             const rect = itemElement.getBoundingClientRect();
