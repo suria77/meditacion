@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Dharma Eterno · Tu espacio de meditación</title>
+    <meta name="theme-color" content="#0b0614">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Dharma Eterno">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="icon" href="/assets/img/icon-192.png">
+    <link rel="apple-touch-icon" href="/assets/img/icon-192.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&display=swap" rel="stylesheet">
+    
+    <style>
+        body, html {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            font-family: 'Inter', sans-serif;
+            background-color: #000;
+            overflow: hidden !important;
+            overscroll-behavior: none;
+            position: fixed;
+        }
+
+        /* FONDO PRINCIPAL */
+        .background-app {
+            position: fixed; 
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('/assets/home/fondo-home.webp') no-repeat center center; 
+            background-size: cover;
+            z-index: 1;
+        }
+
+        /* INTERFAZ PRINCIPAL */
+        .scroll-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 5;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto; 
+            -webkit-overflow-scrolling: touch; 
+            overscroll-behavior: contain;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+            padding: 100px 20px 40px 20px; 
+        }
+
+        .logo-container {
+            position: fixed; 
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+        }
+
+        .logo {
+            width: 70px;
+            height: auto;
+            display: block;
+        }
+
+        .app-title {
+            font-size: 15px; 
+            font-weight: 300; 
+            color: #ffffff;
+            margin-bottom: 40px; 
+            text-align: center;
+            letter-spacing: 5px; 
+            text-transform: uppercase; 
+            opacity: 0.9;
+        }
+
+        .grid-container {
+            display: flex;
+            flex-wrap: wrap; 
+            justify-content: center;
+            align-items: flex-start;
+            gap: 28px; 
+            width: 100%;
+            max-width: 1200px;
+            box-sizing: border-box;
+        }
+
+        /* Estilo base de las cartas */
+        .grid-item {
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: calc(25% - 21px); 
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden; 
+            cursor: pointer;
+            
+            /* Entrada inicial en abanico suave */
+            opacity: 0;
+            transform: translateY(30px);
+            animation: entradaSuave 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            
+            /* Crecimiento pausado y súper fluido */
+            transition: transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.9s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .grid-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            pointer-events: none; 
+        }
+
+        /* CRECIMIENTO LENTO AL PULSAR */
+        .grid-item.carta-pulsada {
+            transform: scale(1.05) !important;
+            z-index: 6; /* Se mantiene ligeramente por encima mientras ocurre el fundido */
+        }
+
+        /* Las no seleccionadas se atenúan con calma */
+        .grid-container.seleccion-activa .grid-item:not(.carta-pulsada) {
+            opacity: 0.3;
+        }
+
+        /* ONDAS DE LUZ CONCÉNTRICAS */
+        .onda-luz {
+            position: absolute;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            transform: scale(0);
+            pointer-events: none;
+            opacity: 1;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.3);
+            animation: expandirOnda 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes expandirOnda {
+            to {
+                transform: scale(5.5);
+                opacity: 0;
+                box-shadow: 0 0 40px rgba(255, 255, 255, 0.2), inset 0 0 40px rgba(255, 255, 255, 0.05);
+            }
+        }
+
+        /* Retrasos escalonados para cada onda */
+        .onda-luz.onda-1 { animation-delay: 0s; }
+        .onda-luz.onda-2 { animation-delay: 0.15s; }
+        .onda-luz.onda-3 { animation-delay: 0.3s; }
+
+        /* Retrasos de entrada inicial relajados */
+        .grid-item:nth-child(1) { animation-delay: 0.15s; }
+        .grid-item:nth-child(2) { animation-delay: 0.3s; }
+        .grid-item:nth-child(3) { animation-delay: 0.45s; }
+        .grid-item:nth-child(4) { animation-delay: 0.6s; }
+
+        @keyframes entradaSuave {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* PANTALLAS SECUNDARIAS: FUNDIDO ENCADENADO LENTO */
+        .sub-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 20; /* Aparecen por encima del Home sin quitarlo */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            
+            /* Transición extremadamente lenta y poética */
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s cubic-bezier(0.3, 0.05, 0.2, 1);
+        }
+
+        /* Cuando se activa, se funde pacíficamente sobre lo que ya hay */
+        .sub-screen.activa {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #pantalla-1 { background-color: #1b2e24; } 
+        #pantalla-2 { background-color: #1a2332; } 
+        #pantalla-3 { background-color: #251b35; } 
+        #pantalla-4 { background-color: #2d1e18; } 
+
+        .sub-screen h1 {
+            font-weight: 200;
+            font-size: 28px;
+            letter-spacing: 3px;
+            margin-bottom: 30px;
+        }
+
+        .btn-volver {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 12px 30px;
+            font-size: 12px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: background 0.5s, transform 0.3s;
+        }
+
+        .btn-volver:active {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(0.97);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) and (orientation: portrait) {
+            .scroll-container { padding-top: 130px; }
+            .grid-container { max-width: 550px; }
+            .grid-item { width: calc(50% - 14px); }
+            .app-title { font-size: 13px; margin-bottom: 30px; }
+        }
+
+        @media (max-height: 500px) and (orientation: landscape) {
+            .scroll-container { padding-top: 80px; }
+            .grid-container { max-width: 95%; }
+            .grid-item { width: calc(25% - 21px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background-app"></div>
+
+    <div class="logo-container">
+        <img src="/assets/img/logo.png" alt="Logo" class="logo">
+    </div>
+
+    <!-- Interfaz Principal (Permanece visible detrás durante el fundido) -->
+    <div class="scroll-container" id="home-screen">
+        <div class="app-title">Tu espacio de meditación</div>
+        <div class="grid-container" id="cartas-contenedor">
+            <div class="grid-item" onclick="abrirSeccion(2, this, event, '/meditaciones/')">
+                <img src="/assets/home/carta-meditaciones.png" alt="Meditaciones por emoción">
+            </div>
+            <div class="grid-item" onclick="abrirSeccion(1, this, event, '/oraculo/')">
+                <img src="/assets/home/carta-oraculo.png" alt="Oráculo de afirmaciones">
+            </div>
+            <div class="grid-item" onclick="abrirSeccion(3, this, event, '/musica/')">
+                <img src="/assets/home/carta-musica.png" alt="Biblioteca de música">
+            </div>
+            <div class="grid-item" onclick="abrirSeccion(4, this, event, '/podcast/')">
+                <img src="/assets/home/carta-podcast.png" alt="Podcast">
+            </div>
+        </div>
+    </div>
+
+    <!-- Fundidos de transición: al terminar se abre la sección real -->
+    <div class="sub-screen" id="pantalla-1"></div>
+    <div class="sub-screen" id="pantalla-2"></div>
+    <div class="sub-screen" id="pantalla-3"></div>
+    <div class="sub-screen" id="pantalla-4"></div>
+
+
+    <script>
+        var navegando = false;
+        function abrirSeccion(numeroPantalla, elemento, event, destino) {
+            if (navegando) return;
+            navegando = true;
+            // 1. La carta elegida crece lenta y armoniosamente
+            document.getElementById('cartas-contenedor').classList.add('seleccion-activa');
+            elemento.classList.add('carta-pulsada');
+
+            // 2. GENERAR ONDAS DE LUZ CONCÉNTRICAS desde el punto del clic
+            const numOndas = 3; // Cantidad de ondas
+            
+            for (let i = 0; i < numOndas; i++) {
+                const onda = document.createElement('div');
+                onda.classList.add('onda-luz', `onda-${i + 1}`);
+                
+                const tamano = 30; // Tamaño inicial pequeño
+                onda.style.width = onda.style.height = `${tamano}px`;
+                
+                const rect = elemento.getBoundingClientRect();
+                const clickX = event.clientX - rect.left;
+                const clickY = event.clientY - rect.top;
+                
+                // Centrar la onda en el punto del clic
+                onda.style.left = `${clickX - (tamano / 2)}px`;
+                onda.style.top = `${clickY - (tamano / 2)}px`;
+                
+                elemento.appendChild(onda);
+            }
+
+            // 3. TRANSICIÓN ESPIRITUAL: La nueva pantalla aparece disolviéndose suavemente ENCIMA de las cartas.
+            setTimeout(() => {
+                document.getElementById(`pantalla-${numeroPantalla}`).classList.add('activa');
+            }, 150); 
+
+            // 4. Abrir la sección cuando el fundido ya casi ha terminado
+            setTimeout(() => { window.location.href = destino; }, 1100);
+        }
+
+        function volverAlHome(numeroPantalla) {
+            navegando = false;
+            // El color secundario se desvanece suavemente revelando de nuevo las cartas que estaban debajo
+            document.getElementById(`pantalla-${numeroPantalla}`).classList.remove('activa');
+            document.getElementById('cartas-contenedor').classList.remove('seleccion-activa');
+            
+            const cartas = document.querySelectorAll('.grid-item');
+            cartas.forEach((carta, indice) => {
+                carta.classList.remove('carta-pulsada');
+                
+                // Limpiar ondas antiguas
+                const ondasAntiguos = carta.querySelectorAll('.onda-luz');
+                ondasAntiguos.forEach(o => o.remove());
+                
+                // Reiniciar animación armónica de abanico al volver
+                carta.style.animation = 'none';
+                carta.offsetHeight; 
+                carta.style.animation = `entradaSuave 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards`;
+                carta.style.animationDelay = `${(indice + 1) * 0.15}s`;
+            });
+        }
+    
+        // Si el usuario vuelve con el gesto "atrás" del móvil, se restablece la portada
+        window.addEventListener('pageshow', function (e) {
+            if (e.persisted || navegando) {
+                document.querySelectorAll('.sub-screen').forEach(s => s.classList.remove('activa'));
+                volverAlHome(0);
+            }
+        });
+    </script>
+
+</body>
+</html>
