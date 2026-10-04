@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Música · Dharma Eterno</title>
+    <!-- Fuentes elegantes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            background-color: #08030c;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Envoltorio de fondo general */
+        .app-viewport {
+            width: 100vw;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #08030c;
+        }
+
+        /* Contenedor principal de la app */
+        .app-container {
+            width: 100%;
+            max-width: 900px;
+            min-height: 100vh;
+            background-image: url('/assets/img/fondo.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.95);
+            position: relative;
+        }
+
+        /* Estilos del Encabezado */
+        .header {
+            text-align: center;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        /* TÍTULO ORO VIEJO / ANTIGUO MATIZADO */
+        .header h1 {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            line-height: 1.25;
+            letter-spacing: 1.5px;
+            text-align: center;
+            margin-bottom: 8px;
+
+            background: linear-gradient(
+                180deg, 
+                #EADBBD 0%, 
+                #C2A15D 20%, 
+                #856428 48%, 
+                #D4B36B 68%, 
+                #94712F 85%, 
+                #573F15 100%
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+
+            filter: drop-shadow(0px 3px 5px rgba(0, 0, 0, 0.92)) drop-shadow(0px 1px 1px rgba(255, 235, 190, 0.2));
+        }
+
+        .header p {
+            color: #cbb483;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.9);
+        }
+
+        /* Contenedor de Botones */
+        .grid-buttons {
+            display: grid;
+            width: 100%;
+            transition: opacity 0.8s ease;
+        }
+
+        .btn-item {
+            width: 100%;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden; /* Mantiene las ondas dentro del marco del botón */
+            border-radius: 12px;
+            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.8s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            pointer-events: none;
+        }
+
+        /* EFECTO AL PULSAR EL BOTÓN */
+        .btn-item.carta-pulsada {
+            transform: scale(1.05) !important;
+            z-index: 6;
+        }
+
+        /* Las no seleccionadas se atenúan con calma */
+        .grid-buttons.seleccion-activa .btn-item:not(.carta-pulsada) {
+            opacity: 0.3;
+        }
+
+        /* ONDAS DE LUZ CONCÉNTRICAS */
+        .onda-luz {
+            position: absolute;
+            border: 2px solid rgba(255, 255, 255, 0.85);
+            border-radius: 50%;
+            transform: scale(0);
+            pointer-events: none;
+            opacity: 1;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.7), inset 0 0 20px rgba(255, 255, 255, 0.35);
+            animation: expandirOnda 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes expandirOnda {
+            to {
+                transform: scale(6);
+                opacity: 0;
+                box-shadow: 0 0 40px rgba(255, 255, 255, 0.2), inset 0 0 40px rgba(255, 255, 255, 0.05);
+            }
+        }
+
+        /* Retrasos escalonados para cada onda */
+        .onda-luz.onda-1 { animation-delay: 0s; }
+        .onda-luz.onda-2 { animation-delay: 0.15s; }
+        .onda-luz.onda-3 { animation-delay: 0.3s; }
+
+        /* Logo inferior */
+        .logo-container {
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* PANTALLAS SECUNDARIAS */
+        .sub-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.4s cubic-bezier(0.3, 0.05, 0.2, 1);
+        }
+
+        .sub-screen.activa {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #pantalla-1 { background-color: #1b2e24; } 
+        #pantalla-2 { background-color: #1a2332; } 
+        #pantalla-3 { background-color: #251b35; } 
+        #pantalla-4 { background-color: #2d1e18; } 
+
+        .sub-screen h1 {
+            font-family: 'Cinzel', serif;
+            font-weight: 400;
+            font-size: 26px;
+            letter-spacing: 3px;
+            margin-bottom: 30px;
+        }
+
+        .btn-volver {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 12px 30px;
+            font-size: 12px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: background 0.5s, transform 0.3s;
+        }
+
+        .btn-volver:active {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(0.97);
+        }
+
+
+        /* ============================================================
+           1. MODO VERTICAL: 1 sola columna
+           ============================================================ */
+        @media (max-width: 768px) and (max-aspect-ratio: 1/1), (orientation: portrait) {
+            .app-container {
+                padding: 55px 20px 35px 20px;
+                min-height: 100vh;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .header p {
+                font-size: 0.95rem;
+            }
+
+            .grid-buttons {
+                grid-template-columns: 1fr !important;
+                gap: 14px;
+                max-width: 420px;
+                margin: 20px 0;
+            }
+
+            .logo-container {
+                max-width: 220px;
+            }
+        }
+
+
+        /* ============================================================
+           2. MODO HORIZONTAL: 2 filas de 2 botones (2x2)
+           ============================================================ */
+        @media (min-aspect-ratio: 1/1), (orientation: landscape) {
+            .app-container {
+                padding: 25px 35px 20px 35px;
+                min-height: 100vh;
+                height: 100vh;
+                justify-content: space-evenly;
+            }
+
+            .header h1 {
+                font-size: 1.9rem;
+            }
+
+            .header p {
+                font-size: 0.95rem;
+            }
+
+            .grid-buttons {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 12px 24px;
+                max-width: 720px;
+                margin: 10px 0;
+            }
+
+            .logo-container {
+                max-width: 170px;
+            }
+
+            /* Con 3 botones, el tercero queda centrado debajo */
+            .btn-item:nth-child(3) {
+                grid-column: 1 / -1;
+                width: calc(50% - 12px);
+                justify-self: center;
+            }
+        }
+
+        /* Pantallas apaisadas con poca altura */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .app-container {
+                padding: 12px 20px 10px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.4rem;
+            }
+
+            .header p {
+                font-size: 0.8rem;
+            }
+
+            .grid-buttons {
+                gap: 8px 16px;
+                max-width: 580px;
+            }
+
+            .logo-container {
+                max-width: 130px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-viewport">
+        <div class="app-container">
+            <!-- Encabezado con efecto Oro Viejo / Antiguo Matizado -->
+            <div class="header">
+                <h1>¿En qué estado quieres vibrar?</h1>
+                <p>Tu Santuario sonoro</p>
+            </div>
+
+            <!-- Botones con efecto de Ondas de Luz al hacer clic -->
+            <div class="grid-buttons" id="cartas-contenedor">
+                <!-- Botón 1 -->
+                <button class="btn-item" onclick="abrirSeccion(this, event, '/musica/bonita/')">
+                    <img src="/assets/musica/bonita.png" alt="Música bonita">
+                </button>
+
+                <!-- Botón 2 -->
+                <button class="btn-item" onclick="abrirSeccion(this, event, '/musica/mantras/')">
+                    <img src="/assets/musica/mantras.png" alt="Música de mantras">
+                </button>
+
+                <!-- Botón 3 -->
+                <button class="btn-item" onclick="abrirSeccion(this, event, '/musica/naturaleza/')">
+                    <img src="/assets/musica/naturaleza.png" alt="Sonidos de naturaleza">
+                </button>
+            </div>
+
+            <!-- Logotipo Dharma Eterno -->
+            <div class="logo-container">
+                <img src="/assets/img/logo.png" alt="Dharma Eterno Logo">
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        var navegando = false;
+        function abrirSeccion(elemento, event, destino) {
+            if (navegando) return;
+            navegando = true;
+            // 1. Efectos visuales en los botones
+            document.getElementById('cartas-contenedor').classList.add('seleccion-activa');
+            elemento.classList.add('carta-pulsada');
+
+            // 2. Generación de las 3 Ondas Concéntricas desde el toque
+            const numOndas = 3;
+            
+            for (let i = 0; i < numOndas; i++) {
+                const onda = document.createElement('div');
+                onda.classList.add('onda-luz', `onda-${i + 1}`);
+                
+                const tamano = 30;
+                onda.style.width = onda.style.height = `${tamano}px`;
+                
+                const rect = elemento.getBoundingClientRect();
+                const clickX = event.clientX - rect.left;
+                const clickY = event.clientY - rect.top;
+                
+                onda.style.left = `${clickX - (tamano / 2)}px`;
+                onda.style.top = `${clickY - (tamano / 2)}px`;
+                
+                elemento.appendChild(onda);
+            }
+
+            // 3. Abrir la sección tras el efecto de ondas
+            setTimeout(() => { window.location.href = destino; }, 900);
+        }
+
+        function volverAlHome() {
+            navegando = false;
+            document.getElementById('cartas-contenedor').classList.remove('seleccion-activa');
+            
+            const botones = document.querySelectorAll('.btn-item');
+            botones.forEach((btn) => {
+                btn.classList.remove('carta-pulsada');
+                
+                // Limpieza de las ondas anteriores
+                const ondasAntiguas = btn.querySelectorAll('.onda-luz');
+                ondasAntiguas.forEach(o => o.remove());
+            });
+        }
+    
+        window.addEventListener('pageshow', function (e) { if (e.persisted || navegando) volverAlHome(); });
+    </script>
+
+
+<!-- Botón volver (añadido al unir la app) -->
+<style>
+.de-back{position:fixed;top:calc(env(safe-area-inset-top,0px) + 14px);left:14px;z-index:100000;width:46px;height:46px;border-radius:50%;
+display:flex;align-items:center;justify-content:center;text-decoration:none;color:#f6dc9a;background:rgba(18,8,32,.62);
+border:1.5px solid rgba(246,220,154,.75);box-shadow:0 4px 16px rgba(0,0,0,.45);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+-webkit-tap-highlight-color:transparent;transition:transform .2s,background .2s}
+.de-back:active{transform:scale(.92);background:rgba(18,8,32,.85)}
+.de-back svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+</style>
+<a class="de-back" href="/" aria-label="Volver"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></a>
+</body>
+</html>
