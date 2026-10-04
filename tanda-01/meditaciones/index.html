@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+   <title>Meditaciones por emoción · Dharma Eterno</title>
+   <style>
+       * {
+           box-sizing: border-box;
+           margin: 0;
+           padding: 0;
+           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+           -webkit-tap-highlight-color: transparent;
+       }
+
+       body {
+           background-color: #120a1f;
+           background-image: url('/assets/img/fondo.webp');
+           background-size: cover;
+           background-position: center center;
+           background-repeat: no-repeat;
+           background-attachment: fixed;
+           color: #ffffff;
+           display: flex;
+           justify-content: center;
+           align-items: flex-start;
+           min-height: 100vh;
+           padding: 40px 20px;
+           overflow-x: hidden;
+       }
+
+       .app-container {
+           max-width: 1040px;
+           width: 100%;
+           text-align: center;
+           padding: 10px;
+           padding-top: 36px;
+           padding-bottom: 400px;
+       }
+
+       .subtitle-top {
+           font-size: 16px;
+           letter-spacing: 2.5px;
+           color: #ccb081;
+           text-transform: uppercase;
+           margin-bottom: 25px;
+           font-weight: 600;
+       }
+
+       h1 {
+           font-size: 34px;
+           font-style: italic;
+           font-weight: 300;
+           line-height: 1.3;
+           margin-bottom: 20px;
+           color: #f5f3f7;
+           text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+       }
+
+       .instruction {
+           font-size: 18px;
+           color: #e3def2;
+           line-height: 1.6;
+           margin-bottom: 45px;
+           padding: 0 20px;
+           max-width: 520px;
+           margin-left: auto;
+           margin-right: auto;
+           text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+       }
+
+       .menu-container {
+           display: grid;
+           grid-template-columns: 1fr;
+           gap: 20px;
+           margin-bottom: 55px;
+           text-align: left;
+       }
+
+       @media (min-width: 650px) { .menu-container { grid-template-columns: repeat(2, 1fr); } }
+       @media (min-width: 950px) { .menu-container { grid-template-columns: repeat(3, 1fr); } }
+
+       /* Cada emoción es una imagen-botón con su lista desplegable */
+       .emotion-block {
+           align-self: flex-start;
+           transition: transform 0.3s ease, filter 0.3s ease;
+       }
+
+       .emotion-btn {
+           cursor: pointer;
+           user-select: none;
+           -webkit-user-select: none;
+           border-radius: 22px;
+           outline: none;
+       }
+
+       .emotion-btn img {
+           width: 100%;
+           height: auto;
+           display: block;
+           pointer-events: none;
+           filter: drop-shadow(0 6px 14px rgba(0,0,0,0.4));
+           transition: filter 0.3s ease, transform 0.3s ease;
+       }
+
+       .emotion-btn:hover img, .emotion-btn:focus-visible img {
+           filter: drop-shadow(0 0 14px rgba(204,177,129,0.55));
+       }
+
+       .emotion-btn:active img { transform: scale(0.985); }
+
+       .emotion-block.active .emotion-btn img {
+           filter: drop-shadow(0 0 16px rgba(204,177,129,0.7));
+       }
+
+       /* LISTA DE MEDITACIONES */
+       .meditation-list {
+           max-height: 0;
+           transition: max-height 0.35s ease-out, margin-top 0.35s ease-out;
+           background-color: #e8dff5;
+           border-radius: 18px;
+           display: flex;
+           flex-direction: column;
+           overflow: hidden;
+           margin-top: 0;
+       }
+
+       .emotion-block.active .meditation-list {
+           max-height: 260px;
+           margin-top: 8px;
+       }
+
+       .meditation-item {
+           padding: 16px 20px 16px 24px;
+           text-align: left;
+           font-size: 15px;
+           font-weight: 500;
+           color: #2b1845;
+           cursor: pointer;
+           border-top: 1px solid rgba(43, 24, 69, 0.1);
+           transition: background 0.2s;
+       }
+
+       .meditation-item:first-child { border-top: none; }
+       .meditation-item:hover { background-color: #dbcee3; }
+       .meditation-item.soon { cursor: default; color: #5a4a73; }
+       .meditation-item.soon:hover { background: none; }
+
+       .star-prefix {
+           color: #b8860b;
+           margin-right: 6px;
+           font-weight: bold;
+       }
+
+       /* LOTO FINAL */
+       .brand-logo-container {
+           margin-top: 40px;
+           padding: 15px;
+           display: flex;
+           flex-direction: column;
+           align-items: center;
+           justify-content: center;
+           gap: 5px;
+           grid-column: 1 / -1;
+       }
+
+       .brand-logo-text {
+           font-size: 18px;
+           font-weight: 300;
+           letter-spacing: 5px;
+           color: #ffffff;
+           text-transform: uppercase;
+           font-family: 'Times New Roman', Times, serif, Georgia;
+           text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+       }
+
+       .brand-logo-image {
+           width: 360px;
+           max-width: 90%;
+           height: auto;
+           margin-top: 30px;
+           filter: drop-shadow(0px 4px 12px rgba(0,0,0,0.5));
+       }
+
+       /* REPRODUCTOR FLOTANTE CON TARJETA VISUAL */
+       .audio-player-panel {
+           position: fixed;
+           bottom: -220px;
+           left: 50%;
+           transform: translateX(-50%);
+           width: calc(100% - 40px);
+           max-width: 650px;
+           background: linear-gradient(to top, #1a1224 0%, #2a1e38 100%);
+           border: 1px solid rgba(255, 255, 255, 0.15);
+           border-radius: 24px;
+           padding: 16px;
+           box-shadow: 0 -10px 30px rgba(0,0,0,0.6);
+           transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+           z-index: 99990;
+           margin-bottom: 25px;
+           display: flex;
+           flex-direction: column;
+           gap: 12px;
+       }
+
+       .audio-player-panel.show {
+           bottom: 0;
+       }
+
+       .player-main-content {
+           display: flex;
+           align-items: center;
+           gap: 16px;
+           position: relative;
+       }
+
+       .player-thumbnail-container {
+           width: 110px;
+           height: 62px;
+           border-radius: 10px;
+           overflow: hidden;
+           background-color: rgba(0, 0, 0, 0.2);
+           flex-shrink: 0;
+           border: 1px solid rgba(255, 255, 255, 0.08);
+       }
+
+       .player-thumbnail {
+           width: 100%;
+           height: 100%;
+           object-fit: contain;
+           padding: 4px;
+         }
+
+       .track-info {
+           text-align: left;
+           flex-grow: 1;
+           padding-right: 30px;
+           overflow: hidden;
+       }
+
+       .track-emotion {
+           font-size: 11px;
+           text-transform: uppercase;
+           letter-spacing: 1px;
+           color: #ccb081;
+           margin-bottom: 2px;
+       }
+
+       .track-title {
+           font-size: 14px;
+           font-weight: 500;
+           color: #ffffff;
+           white-space: nowrap;
+           overflow: hidden;
+           text-overflow: ellipsis;
+       }
+
+       .close-player {
+           background: none;
+           border: none;
+           color: #8c839c;
+           font-size: 18px;
+           cursor: pointer;
+           padding: 6px;
+           position: absolute;
+           top: 0;
+           right: 0;
+       }
+
+       .player-controls {
+           display: flex;
+           align-items: center;
+           gap: 15px;
+       }
+
+       .progress-container {
+           flex-grow: 1;
+           display: flex;
+           align-items: center;
+           gap: 8px;
+       }
+
+       .time-text {
+           font-size: 11px;
+           color: #8c839c;
+           width: 35px;
+       }
+
+       .progress-bar-bg {
+           flex-grow: 1;
+           height: 5px;
+           background-color: rgba(255, 255, 255, 0.1);
+           border-radius: 3px;
+           position: relative;
+           cursor: pointer;
+       }
+
+       .progress-bar-fill {
+           width: 0%;
+           height: 100%;
+           background-color: #e3def2;
+           border-radius: 3px;
+       }
+
+       .play-btn {
+           width: 44px;
+           height: 44px;
+           background-color: #ffffff;
+           border: none;
+           border-radius: 50%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           cursor: pointer;
+           color: #0d0914;
+           font-size: 14px;
+           transition: transform 0.2s;
+           flex-shrink: 0;
+       }
+
+       .play-btn:hover {
+           transform: scale(1.05);
+       }
+   </style>
+</head>
+<body>
+
+   <div class="app-container">
+       <p class="subtitle-top">Tu templo de meditación</p>
+       <h1>¿Qué emoción quieres trabajar?</h1>
+       <p class="instruction">Elige lo que más resuene contigo ahora.</p>
+
+       <div class="menu-container">
+
+           <!-- ANSIEDAD -->
+           <div class="emotion-block">
+               <div class="emotion-btn" role="button" tabindex="0" aria-label="Ansiedad" onclick="toggleBlock(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleBlock(this)}">
+                   <img src="/assets/meditaciones/6bot.png" alt="Ansiedad" draggable="false">
+               </div>
+               <div class="meditation-list">
+                   <div class="meditation-item soon"><span class="star-prefix">✦</span> 1. Próximamente disponible</div>
+               </div>
+           </div>
+
+           <!-- VALENTÍA -->
+           <div class="emotion-block">
+               <div class="emotion-btn" role="button" tabindex="0" aria-label="Valentía" onclick="toggleBlock(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleBlock(this)}">
+                   <img src="/assets/meditaciones/5bot.png" alt="Valentía" draggable="false">
+               </div>
+               <div class="meditation-list">
+                   <div class="meditation-item soon"><span class="star-prefix">✦</span> 1. Próximamente disponible</div>
+               </div>
+           </div>
+
+           <!-- POSITIVIDAD -->
+           <div class="emotion-block">
+               <div class="emotion-btn" role="button" tabindex="0" aria-label="Positividad" onclick="toggleBlock(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleBlock(this)}">
+                   <img src="/assets/meditaciones/4bot.png" alt="Positividad" draggable="false">
+               </div>
+               <div class="meditation-list">
+                   <div class="meditation-item" onclick="playRealAudio('Positividad', 'Liberándose de la negatividad', '/meditaciones/audio/1-Liberandose-de-la-negatividad.mp3')">
+                       <span class="star-prefix">✦</span> 1. Liberándose de la negatividad
+                   </div>
+                   <div class="meditation-item" onclick="playRealAudio('Positividad', 'Meditación de la felicidad verdadera', '/meditaciones/audio/2-Meditacion-felicidad-verdadera.mp3')">
+                       <span class="star-prefix">✦</span> 2. Meditación de la felicidad verdadera
+                   </div>
+                   <div class="meditation-item" onclick="playRealAudio('Positividad', 'Meditación para un día luminoso', '/meditaciones/audio/3-Meditacion-para-un-dia-luminoso.mp3')">
+                       <span class="star-prefix">✦</span> 3. Meditación para un día luminoso
+                   </div>
+               </div>
+           </div>
+
+           <!-- CALMA -->
+           <div class="emotion-block">
+               <div class="emotion-btn" role="button" tabindex="0" aria-label="Calma" onclick="toggleBlock(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleBlock(this)}">
+                   <img src="/assets/meditaciones/3bot.png" alt="Calma" draggable="false">
+               </div>
+               <div class="meditation-list">
+                   <div class="meditation-item" onclick="playRealAudio('Calma', 'Paz interior con el mantra OM', '/meditaciones/audio/1-Paz-interior-con-el-mantra-om.mp3')">
+                       <span class="star-prefix">✦</span> 1. Paz interior con el mantra OM
+                   </div>
+                   <div class="meditation-item" onclick="playRealAudio('Calma', 'Meditación relajación Yoga Nidra', '/meditaciones/audio/2-Meditacion-relajacion-Yoga-Nidra.mp3')">
+                       <span class="star-prefix">✦</span> 2. Meditación relajación Yoga Nidra
+                   </div>
+                   <div class="meditation-item" onclick="playRealAudio('Calma', 'Del estrés a la Paz en minutos', '/meditaciones/audio/3-Del-estres-a-la-Paz-en-minutos.mp3')">
+                       <span class="star-prefix">✦</span> 3. Del estrés a la Paz en minutos
+                   </div>
+               </div>
+           </div>
+
+           <!-- PARAR LA MENTE -->
+           <div class="emotion-block">
+               <div class="emotion-btn" role="button" tabindex="0" aria-label="Parar la mente" onclick="toggleBlock(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleBlock(this)}">
+                   <img src="/assets/meditaciones/2bot.png" alt="Parar la mente" draggable="false">
+               </div>
+               <div class="meditation-list">
+                   <div class="meditation-item" onclick="playRealAudio('Parar la mente', 'Paz mental en 3 simples pasos', '/meditaciones/audio/1-Paz-mental-en-3-simples-pasos.mp3')">
+                       <span class="star-prefix">✦</span> 1. Paz mental en 3 simples pasos
+                   </div>
+                   <div class="meditation-item" onclick="playRealAudio('Parar la mente', 'Meditación OM fácil para silenciar la mente', '/meditaciones/audio/2-Meditacion-om-facil-silenciar-la-mente.mp3')">
+                       <span class="star-prefix">✦</span> 2. Meditación OM fácil para silenciar la mente
+                   </div>
+                   <div class="meditation-item" onclick="playRealAudio('Parar la mente', 'Relax y silencio mental ahora', '/meditaciones/audio/3-Relax-y-silencio-mental-mindfulness.mp3')">
+                       <span class="star-prefix">✦</span> 3. Relax y silencio mental ahora
+                   </div>
+               </div>
+           </div>
+
+           <!-- LIMPIEZA -->
+           <div class="emotion-block">
+               <div class="emotion-btn" role="button" tabindex="0" aria-label="Limpieza" onclick="toggleBlock(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleBlock(this)}">
+                   <img src="/assets/meditaciones/1bot.png" alt="Limpieza" draggable="false">
+               </div>
+               <div class="meditation-list">
+                   <div class="meditation-item soon"><span class="star-prefix">✦</span> 1. Próximamente disponible</div>
+               </div>
+           </div>
+
+           <!-- LOTO -->
+           <div class="brand-logo-container">
+               <p class="brand-logo-text">Dharma Eterno</p>
+               <img class="brand-logo-image" src="/assets/img/loto.png" alt="Loto Dharma Eterno">
+           </div>
+
+       </div>
+   </div>
+
+   <div id="playerPanel" class="audio-player-panel">
+       <div class="player-main-content">
+           <div class="player-thumbnail-container">
+               <img id="playerThumb" class="player-thumbnail" src="/assets/img/loto.png" alt="">
+           </div>
+           <div class="track-info">
+               <div id="playerEmotion" class="track-emotion">EMOCIÓN</div>
+               <div id="playerTitle" class="track-title">Selecciona una meditación</div>
+           </div>
+           <button class="close-player" onclick="closePlayer()" aria-label="Cerrar reproductor">✕</button>
+       </div>
+
+       <div class="player-controls">
+           <button id="mainPlayBtn" class="play-btn" onclick="togglePlay()" aria-label="Reproducir / pausar">▶</button>
+           <div class="progress-container">
+               <span id="currentTime" class="time-text">00:00</span>
+               <div class="progress-bar-bg" onclick="seekAudio(event)">
+                   <div id="progressFill" class="progress-bar-fill"></div>
+               </div>
+               <span id="durationTime" class="time-text">00:00</span>
+           </div>
+       </div>
+   </div>
+
+   <audio id="globalAudio" style="display:none;" preload="none"></audio>
+
+   <script>
+       const audio = document.getElementById('globalAudio');
+       const playBtn = document.getElementById('mainPlayBtn');
+       const progressFill = document.getElementById('progressFill');
+       const currentTimeTxt = document.getElementById('currentTime');
+       const durationTimeTxt = document.getElementById('durationTime');
+
+       function toggleBlock(element) {
+           const currentBlock = element.parentElement;
+           const isActive = currentBlock.classList.contains('active');
+           document.querySelectorAll('.emotion-block').forEach(block => block.classList.remove('active'));
+           if (!isActive) currentBlock.classList.add('active');
+       }
+
+       function playRealAudio(emotion, title, audioUrl) {
+           document.getElementById('playerEmotion').innerText = emotion;
+           document.getElementById('playerTitle').innerText = title;
+           audio.src = audioUrl;
+           audio.play().catch(err => console.log("Error al reproducir:", err));
+           document.getElementById('playerPanel').classList.add('show');
+       }
+
+       function closePlayer() {
+           audio.pause();
+           document.getElementById('playerPanel').classList.remove('show');
+       }
+
+       function togglePlay() {
+           if (audio.paused) audio.play(); else audio.pause();
+       }
+
+       audio.addEventListener('play',  () => { playBtn.innerText = '⏸'; });
+       audio.addEventListener('pause', () => { playBtn.innerText = '▶'; });
+       audio.addEventListener('ended', () => { playBtn.innerText = '▶'; progressFill.style.width = '0%'; });
+
+       audio.ontimeupdate = function() {
+           if (audio.duration) {
+               progressFill.style.width = (audio.currentTime / audio.duration) * 100 + '%';
+               currentTimeTxt.innerText = formatTime(audio.currentTime);
+               durationTimeTxt.innerText = formatTime(audio.duration);
+           }
+       };
+
+       function formatTime(seconds) {
+           if (isNaN(seconds)) return '00:00';
+           let min = Math.floor(seconds / 60);
+           let sec = Math.floor(seconds % 60);
+           if (min < 10) min = '0' + min;
+           if (sec < 10) sec = '0' + sec;
+           return min + ':' + sec;
+       }
+
+       function seekAudio(event) {
+           const rect = event.currentTarget.getBoundingClientRect();
+           audio.currentTime = ((event.clientX - rect.left) / rect.width) * audio.duration;
+       }
+   </script>
+
+<!-- Botón volver (añadido al unir la app) -->
+<style>
+.de-back{position:fixed;top:calc(env(safe-area-inset-top,0px) + 14px);left:14px;z-index:100000;width:46px;height:46px;border-radius:50%;
+display:flex;align-items:center;justify-content:center;text-decoration:none;color:#f6dc9a;background:rgba(18,8,32,.62);
+border:1.5px solid rgba(246,220,154,.75);box-shadow:0 4px 16px rgba(0,0,0,.45);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+-webkit-tap-highlight-color:transparent;transition:transform .2s,background .2s}
+.de-back:active{transform:scale(.92);background:rgba(18,8,32,.85)}
+.de-back svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+</style>
+<a class="de-back" href="/" aria-label="Volver"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></a>
+</body>
+</html>
