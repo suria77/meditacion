@@ -40,3 +40,16 @@ Cada sección es una carpeta con su `index.html`, y se abre en `/seccion/`.
 - La home abre las 4 secciones y la flecha vuelve.
 - Música → 3 botones → cada reproductor suena.
 - Meditaciones: Positividad y Calma suenan (cuando estén los mp3).
+
+## Tienda y tutorial de instalación (comunes a todas las pantallas)
+```
+tienda/tienda.js     Crea la tienda "Material Extra" (Música, Audiolibros, Libros y Packs al final)
+                     y el botón "? TUTORIAL DE INSTALACIÓN". Para cambiar productos, edita sus listas.
+tienda/tienda.css    Estilos (los mismos de Japa-Móvil)
+tienda/img/          Portadas de la tienda
+tienda/discos/       Reproductores de muestras (se abren en ventana)
+tienda/fonts/        Fuentes de esos reproductores
+tienda/instalacion/  Páginas del PDF del tutorial (iPhone/iPad y Android) + el PDF completo
+```
+Cada pantalla la carga con `<link rel="stylesheet" href="/tienda/tienda.css">`,
+`<div id="de-tienda"></div>` y `<script src="/tienda/tienda.js" defer></script>`.

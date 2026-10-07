@@ -1,0 +1,502 @@
+/* =====================================================================
+   Tienda "Material Extra" + botón "Tutorial de instalación"
+   Común a todas las pantallas de la app. Copia de la tienda de Japa-Móvil
+   (mismo diseño), con el carrusel PACKS al final.
+   ===================================================================== */
+
+.de-tienda,
+.jp-help-modal,
+.jp-disc-modal {
+  --jp-cream: #F2E8D5;
+  --jp-muted: #A78BFA;
+  --jp-gold: #C084FC;
+  --jp-violet: #C084FC;
+  --jp-border: #4A3B5C;
+}
+
+.de-tienda {
+  display: block;
+  box-sizing: border-box;
+  font-family: 'Karla', 'Helvetica Neue', Arial, sans-serif;
+  text-align: left;
+  color: var(--jp-cream);
+  -webkit-text-size-adjust: 100%;
+}
+.de-tienda *,
+.de-tienda *::before,
+.de-tienda *::after { box-sizing: border-box; }
+
+/* --- Botón TUTORIAL DE INSTALACIÓN: esquina inferior derecha de la pantalla, encima de la tienda --- */
+.de-tutorial-bar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 26px 20px 20px;
+}
+
+.jp-btn-tutorial {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 6px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(192, 132, 252, 0.5);
+  background: transparent;
+  color: var(--jp-cream);
+  font-family: 'Karla', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.jp-btn-tutorial:hover { background: rgba(192, 132, 252, 0.14); border-color: var(--jp-violet); }
+.jp-btn-tutorial:active { transform: scale(0.97); }
+.jp-btn-tutorial .jp-btn-label { white-space: normal; text-align: center; line-height: 1.2; }
+
+@media (max-width: 480px) {
+  .de-tutorial-bar { padding: 22px 16px 18px; }
+  .jp-btn-tutorial { font-size: 10px; padding: 5px 9px; }
+}
+
+/* --- Carrusel de tienda (Material Extra) --- */
+.jp-store-section {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  border: none;
+  box-shadow: inset 0 1px 0 0 #4A3B5C;
+  padding: 28px 16px calc(32px + env(safe-area-inset-bottom, 0px));
+  background-color: #150F1E;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 0;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.jp-store-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(21, 15, 30, 0.55);
+  z-index: 0;
+}
+
+.jp-store-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.jp-store-title {
+  position: relative;
+  z-index: 1;
+  text-align: left;
+  color: var(--jp-violet);
+  font-family: 'Karla', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 0 0 20px;
+  padding: 0;
+  line-height: 1.25;
+}
+
+.jp-store-title-note {
+  text-transform: none;
+  font-weight: 400;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  color: #F2E8D5;
+  margin-left: 12px;
+  white-space: nowrap;
+}
+
+.jp-store-main-title {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: var(--jp-gold);
+  font-family: 'Karla', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 26px;
+  padding: 0;
+  line-height: 1.2;
+}
+
+.jp-store-group { position: relative; z-index: 1; }
+.jp-store-group + .jp-store-group { margin-top: 30px; }
+
+.jp-store-amazon-icon {
+  display: block;
+  width: 40px;
+  max-width: 100%;
+  height: auto;
+  margin-top: 6px;
+}
+
+.jp-store-scroller { position: relative; }
+
+.jp-store-carousel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 4px 12px;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--jp-gold) transparent;
+  touch-action: pan-x pan-y;
+  overscroll-behavior-x: contain;
+}
+.jp-store-carousel::-webkit-scrollbar { height: 6px; }
+.jp-store-carousel::-webkit-scrollbar-thumb { background: rgba(192, 132, 252, 0.4); border-radius: 999px; }
+
+.jp-store-item {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 110px;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.jp-store-item:hover,
+.jp-store-item:active { transform: translateY(-4px); }
+
+.jp-store-img-wrap {
+  width: 100%;
+  height: 165px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.jp-store-img-wrap-square { height: 110px; }
+
+.jp-store-img {
+  display: block;
+  width: 110px;
+  height: 165px;
+  object-fit: contain;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  border: 1px solid var(--jp-border);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+.jp-store-img-square { height: 110px; }
+.jp-store-img-noframe { background: none; border: none; border-radius: 0; box-shadow: none; }
+
+.jp-store-label {
+  margin-top: 8px;
+  color: var(--jp-cream);
+  font-family: 'Karla', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .jp-store-item { width: 96px; }
+  .jp-store-img-wrap { height: 144px; }
+  .jp-store-img-wrap-square { height: 96px; }
+  .jp-store-img { width: 96px; height: 144px; }
+  .jp-store-img-square { height: 96px; }
+  .jp-store-title { font-size: 17px; }
+  .jp-store-title-note { font-size: 13.5px; margin-left: 8px; }
+}
+
+/* Flechas para quien usa ratón (con el dedo se desliza directamente) */
+.jp-store-arrow { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  .jp-store-carousel { scroll-snap-type: none; }
+  .jp-store-arrow {
+    display: flex;
+    position: absolute;
+    top: 50px;
+    z-index: 3;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid var(--jp-violet);
+    background: rgba(21, 15, 30, 0.9);
+    color: var(--jp-violet);
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  }
+  .jp-store-arrow:hover { background: var(--jp-violet); color: #150F1E; }
+  .jp-store-arrow-prev { left: 2px; }
+  .jp-store-arrow-next { right: 2px; }
+  .jp-store-arrow[hidden] { display: none; }
+}
+
+/* --- Botón "Cerrar" del reproductor de muestras --- */
+.jp-modal-close {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px 9px 12px;
+  border-radius: 999px;
+  border: none;
+  background-color: #6B21A8;
+  color: #FFFFFF;
+  font-family: 'Karla', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+}
+.jp-modal-close .jp-modal-close-x { font-size: 19px; line-height: 1; color: #FFFFFF; }
+
+/* --- Reproductor de disco (muestras de la tienda) --- */
+.jp-disc-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200000;
+  padding: 20px;
+}
+.jp-disc-modal-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 1180px;
+  max-height: 900px;
+}
+.jp-disc-modal-content iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 0;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+@media (max-width: 700px) {
+  .jp-disc-modal { padding: 0; }
+  .jp-disc-modal-content { max-width: 100%; max-height: 100%; }
+  .jp-disc-modal-content iframe { border-radius: 0; }
+  .jp-disc-modal .jp-modal-close { top: calc(12px + env(safe-area-inset-top, 0px)); }
+}
+
+/* --- Ventana "Tutorial de instalación" --- */
+.jp-help-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(12, 8, 20, 0.82);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  font-family: 'Karla', 'Helvetica Neue', Arial, sans-serif;
+  text-align: left;
+}
+.jp-help-modal * { box-sizing: border-box; }
+.jp-help-hide { display: none !important; }
+
+.jp-help-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 580px;
+  height: 100%;
+  max-height: 880px;
+  background: linear-gradient(180deg, #FDFAFF 0%, #F1E8FA 55%, #E6DAF5 100%);
+  border: 1px solid rgba(107, 33, 168, 0.28);
+  border-radius: 24px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  overflow: hidden;
+  color: #2B1050;
+  animation: jp-help-in 0.22s ease-out both;
+}
+@keyframes jp-help-in {
+  from { opacity: 0; transform: translateY(14px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
+}
+
+.jp-help-bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  padding-top: calc(12px + env(safe-area-inset-top, 0px));
+  background: rgba(255, 255, 255, 0.75);
+  border-bottom: 1px solid rgba(107, 33, 168, 0.16);
+}
+
+.jp-help-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 15.5px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.jp-help-close {
+  margin-left: auto;
+  background: #6B21A8;
+  color: #FFFFFF;
+  box-shadow: 0 3px 10px rgba(107, 33, 168, 0.35);
+}
+.jp-help-close span { font-size: 21px; line-height: 1; }
+
+.jp-help-scroll {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 24px 18px 30px;
+  padding-bottom: calc(30px + env(safe-area-inset-bottom, 0px));
+}
+
+.jp-help-title {
+  margin: 0 0 6px;
+  font-size: 27px;
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #2B1050;
+}
+.jp-help-sub {
+  margin: 0 0 22px;
+  font-size: 17px;
+  line-height: 1.45;
+  color: #4B3568;
+}
+
+.jp-help-seg { display: flex; gap: 10px; margin: 0 0 18px; }
+.jp-help-seg button {
+  flex: 1 1 0;
+  min-height: 58px;
+  padding: 10px 8px;
+  border: 2px solid #CDB6EA;
+  border-radius: 16px;
+  background: #FFFFFF;
+  color: #3B1A6B;
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.jp-help-seg button[aria-pressed="true"] {
+  border-color: #6B21A8;
+  box-shadow: 0 0 0 3px rgba(107, 33, 168, 0.18);
+}
+.jp-help-seg button[data-os="ios"][aria-pressed="true"] { background: #D8C2F0; }
+.jp-help-seg button[data-os="android"][aria-pressed="true"] { background: #B5D6F4; }
+
+.jp-help-note {
+  margin: 0 0 18px;
+  padding: 14px 16px;
+  border: 2px solid #E9C86A;
+  border-radius: 14px;
+  background: #FFF7DD;
+  color: #4A3500;
+  font-size: 16.5px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.jp-help-steps { display: flex; flex-direction: column; gap: 16px; }
+.jp-help-step { margin: 0; }
+.jp-help-step img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1137 / 1731;
+  border: 1px solid rgba(43, 16, 80, 0.22);
+  border-radius: 16px;
+  background: #150F1E;
+  box-shadow: 0 10px 24px rgba(43, 16, 80, 0.25);
+}
+
+.jp-help-pdf {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 54px;
+  margin: 24px 0 4px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: #6B21A8;
+  color: #FFFFFF;
+  font-size: 17px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(107, 33, 168, 0.35);
+}
+
+.jp-btn-tutorial:focus-visible,
+.jp-store-item:focus-visible,
+.jp-help-btn:focus-visible,
+.jp-help-seg button:focus-visible,
+.jp-help-pdf:focus-visible {
+  outline: 3px solid #F59E0B;
+  outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+  .jp-help-modal { padding: 0; }
+  .jp-help-panel { max-width: none; max-height: none; border: none; border-radius: 0; }
+  .jp-help-title { font-size: 25px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jp-help-panel { animation: none; }
+  .jp-help-seg button { transition: none; }
+}

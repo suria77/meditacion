@@ -92,6 +92,7 @@
     .an-disc-modal-content iframe { border-radius: 0; }
   }
 </style>
+<link rel="stylesheet" href="/tienda/tienda.css">
 </head>
 <body>
 
@@ -369,68 +370,11 @@
   buildCarousel();
 </script>
 
-<div class="an-store-section" id="anStore" style="background-image:url('tienda/fondo-tienda.webp');"></div>
+<!-- (la tienda antigua del oráculo se sustituye por la tienda común de la app) -->
+<!-- Tienda "Material Extra" + Tutorial de instalación (común a toda la app) -->
+<div id="de-tienda"></div>
+<script src="/tienda/tienda.js" defer></script>
 
-<script>
-  (function () {
-    var AMAZON_ICON = 'tienda/amazon.webp';
-    var packsItems = [
-      { name: 'Ganesha', img: 'tienda/Ganesha.webp', link: 'https://dharmaeterno-wbaa7e.subscribepage.io/' },
-      { name: 'Lakshmi', img: 'tienda/Lakshmi.webp', link: 'https://dharmaeterno-osga2e.subscribepage.io/' },
-      { name: 'Shiva', img: 'tienda/Shiva.webp', link: 'https://dharmaeterno-vjioxg.subscribepage.io/' },
-      { name: 'Krishna', img: 'tienda/Krishna.webp', link: 'https://dharmaeterno-iu1jpe.subscribepage.io/' },
-      { name: 'Durga', img: 'tienda/Durga.webp', link: 'https://dharmaeterno-n2t1up.subscribepage.io/' },
-      { name: 'Hanuman', img: 'tienda/Hanuman.webp', link: 'https://dharmaeterno-bey52m.subscribepage.io/' },
-      { name: 'Kali', img: 'tienda/Kali.webp', link: 'https://dharmaeterno-ec8pog.subscribepage.io/' },
-      { name: 'Anandamayi Ma', img: 'tienda/Anandamayi.jpeg', link: 'https://dharmaeterno-bsjf8o.subscribepage.io/' }
-    ];
-    var booksItems = [
-      { name: 'Mantra Yoga', img: 'tienda/Mantras.webp', link: 'https://www.amazon.com/-/es/MANTRA-YOGA-Poder-Palabra-Spanish/dp/B09X4XDT96', amazon: true },
-      { name: 'El yoga del corazón', img: 'tienda/IMG_3901.jpeg', link: 'https://www.amazon.es/dp/B0BYRKHQG6', amazon: true },
-      { name: 'Mitos de India', img: 'tienda/IMG_3898-1.jpeg', link: 'https://www.amazon.es/dp/B0BNTZ2ZNR', amazon: true },
-      { name: 'Ramayana', img: 'tienda/IMG_3899.jpeg', link: 'https://www.amazon.es/dp/B0BYRPWFJ3', amazon: true },
-      { name: 'Tao te Ching', img: 'tienda/IMG_3904.png', player: 'discos/tao-te-ching.html' },
-      { name: 'Dhammapada', img: 'tienda/IMG_3925.jpeg', player: 'discos/dhammapada.html' }
-    ];
-    var musicItems = [
-      { name: 'Cd Krishna Prema', img: 'tienda/CD-Krishna-Prema.webp', square: true, noFrame: true, player: 'discos/krishna-prema.html' },
-      { name: 'Rumi "Todo Amor"', img: 'tienda/IMG_3906.jpeg', square: true, noFrame: true, player: 'discos/rumi-todo-amor.html' },
-      { name: 'Rumi 2 "Versos de Luz"', img: 'tienda/IMG_3907.jpeg', square: true, noFrame: true, player: 'discos/versos-de-luz.html' }
-    ];
-    function group(title, items) {
-      var h = items.map(function (it) {
-        var cls = 'an-store-img' + (it.square ? ' an-store-img-square' : '') + (it.noFrame ? ' an-store-img-noframe' : '');
-        var badge = it.amazon ? '<img class="an-store-amazon-icon" src="' + AMAZON_ICON + '" alt="Amazon">' : '';
-        var open = it.player
-          ? '<button type="button" class="an-store-item" data-player="' + it.player + '">'
-          : '<a class="an-store-item" href="' + it.link + '" target="_blank" rel="noopener">';
-        var close = it.player ? '</button>' : '</a>';
-        return open + '<div class="an-store-img-wrap"><img class="' + cls + '" src="' + it.img + '" alt="' + it.name + '" loading="lazy"></div>' +
-               '<span class="an-store-label">' + it.name + '</span>' + badge + close;
-      }).join('');
-      var allSquare = items.every(function (it) { return it.square; });
-      return '<div class="an-store-group"><h3 class="an-store-title">' + title + '</h3><div class="an-store-carousel' + (allSquare ? ' an-store-square' : '') + '">' + h + '</div></div>';
-    }
-    var store = document.getElementById('anStore');
-    store.innerHTML = '<div class="an-store-overlay"></div><h2 class="an-store-main-title">Tienda</h2>' +
-      group('Libros &amp; Audiolibros', booksItems) + group('Música', musicItems) + group('Packs', packsItems);
-
-    store.addEventListener('click', function (e) {
-      var btn = e.target.closest('[data-player]');
-      if (!btn) return;
-      e.preventDefault();
-      var overlay = document.createElement('div');
-      overlay.className = 'an-disc-modal';
-      overlay.innerHTML = '<div class="an-disc-modal-content">' +
-        '<button class="an-modal-close" aria-label="Cerrar"><span>&times;</span> Cerrar</button>' +
-        '<iframe title="Reproductor de muestras" src="' + btn.getAttribute('data-player') + '"></iframe></div>';
-      document.body.appendChild(overlay);
-      function closeModal() { overlay.remove(); }
-      overlay.addEventListener('click', function (ev) { if (ev.target === overlay) closeModal(); });
-      overlay.querySelector('.an-modal-close').addEventListener('click', closeModal);
-    });
-  })();
-</script>
 
 <!-- Botón volver (añadido al unir la app) -->
 <style>
